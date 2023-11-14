@@ -19,10 +19,13 @@ function setupPlay() {
 }
 
 function updateBosch(data) {
-    const cvs = document.getElementById('bosch')
-        , ctx = cvs.getContext('2d')
-        , ww = cvs.width
-        , hh = cvs.height
+    const cvs = document.getElementById('bosch'),
+          ctx = cvs.getContext('2d'),
+          ww = cvs.offsetWidth,
+          hh = cvs.offsetHeight;
+
+    cvs.width = ww;
+    cvs.height = hh;
 
     ctx.fillStyle = 'black';
     ctx.fillRect(0, 0, ww, hh);
