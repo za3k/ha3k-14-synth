@@ -21,6 +21,11 @@ body > * {
 .slider > input {
     flex: 1 1;
 }
+#bosch {
+    display: block;
+    width: 95%;
+    max-height: 200px;
+}
 label {
     margin-right: 20px;
     width: 100px;
