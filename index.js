@@ -74,8 +74,10 @@ function updatePlayButton() {
 
 function load_inputs() {
     _.each(args, function(arg) {
-        var arg_value = $("#inputs input[name=" + arg + "]").val();
+        var div = $(`#inputs input[name="${arg}"]`);
+        var arg_value = div.val();
         var num_value = Number(arg_value);
+        div.parent().children(".display").text(num_value);
         if (arg_value === "" || _.isUndefined(arg_value)) {
           arg_value = undefined;
         } else if (!_.isNaN(num_value) && parseFloat(arg_value)==num_value) {
@@ -119,8 +121,8 @@ function change_parameters(new_args) {
         $("#inputs div:has(input[name=" + arg + "])").remove();
     });
     _.each(added_args, function(arg) {
-        $("#inputs").append(`<div class="slider"><label>${arg}</label><input type="range" name="${arg}" min="0" max="100" value="50"></div>`);
-        $("#inputs input[name=" + arg + "]").on("input", function() {
+        $("#inputs").append(`<div class="slider"><label>${arg}</label><input type="range" name="${arg}" min="0" max="100" value="50"><div class="display"></div>`);
+        $(`#inputs input[name=${arg}]`).on("input", function() {
             load_inputs();
             recalc();
         });
