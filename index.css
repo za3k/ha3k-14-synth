@@ -1,3 +1,11 @@
+html {
+    font-size: 24pt;
+}
+
+input, select {
+    font-size: 24pt;
+}
+
 body > * {
     margin-left: 100px;
 }

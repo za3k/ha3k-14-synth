@@ -2,27 +2,36 @@ function setupPlay() {
     if (window.audioProcessor) return window.audioProcessor;
     window.audioContext = new (window.AudioContext || window.webkitAudioContext);
 
-    return window.audioProcessor = 
+    window.audioProcessor = 
         audioContext.createScriptProcessor(4096, 1, 1);
+
+    var loops=0;
+    audioProcessor.onaudioprocess = function(e) {
+        if (!window.activeSynth) return;
+        var output = e.outputBuffer.getChannelData(0);
+        for (var i = 0; i < output.length; i++) {
+            output[i] = Math.min(window.activeSynth(loops*output.length + i), 1) * 0.02;
+        }
+        loops++;
+    }
+
 }
 function play(g) {
-    var loops=0;
-    const audioProcessor = setupPlay();
+    setupPlay();
     if (g) {
+        window.playing = true;
         console.log("Audio started");
-        audioProcessor.onaudioprocess = function(e) {
-            var output = e.outputBuffer.getChannelData(0);
-            for (var i = 0; i < output.length; i++) {
-                output[i] = Math.min(g(loops*output.length + i), 1) * 0.02;
-            }
-            loops++;
-        }
         audioProcessor.connect(audioContext.destination);
     } else {
+        window.playing = false;
         console.log("Audio stopped");
-        delete audioProcessor.onaudioprocess;
         audioProcessor.disconnect();
     }
+    updatePlayButton();
+}
+function updatePlayButton() {
+    $(".play").toggle(!playing);
+    $(".pause").toggle(playing);
 }
 
 function load_inputs() {
@@ -44,18 +53,16 @@ function recalc() {
     });
     if (_.contains(fargs, undefined)) {
         $("#result").text(null);
-        $(".play").hide();
         return;
     }
     try {
         var result = window.activeSynth = f.apply(params, fargs);
+        updatePlayButton();
     } catch (e) {
         $("#result").text(e);
-        $(".play").hide();
         return;
     }
     $("#result").text("Ready to play");
-    $(".play").show();
 }
 
 function arg_names(f) {
@@ -74,11 +81,20 @@ function change_parameters(new_args) {
         $("#inputs div:has(input[name=" + arg + "])").remove();
     });
     _.each(added_args, function(arg) {
+        $("#inputs").append(`<div><label>${arg}</label><input type="range" name="${arg}" min="0" max="100" value="50"></div>`);
+        $("#inputs input[name=" + arg + "]").on("input", function() {
+            load_inputs();
+            recalc();
+        });
+
+        // OLD: Text box
+        /*
         $("#inputs").append("<div><label>" + arg + "</label><input type=\"text\" name=\"" + arg + "\" value=\"\"></div>");
         $("#inputs input[name=" + arg + "]").on("input", function() {
             load_inputs();
             recalc();
         });
+        */
     });
     args = new_args;
 }
@@ -108,6 +124,7 @@ $(document).ready(() => {
         $("#premade option[selected]").attr("selected","");
         $("#premade option[value="+hash+"]").attr("selected","selected");
     }
+
     for (var name in window) {
         const f = window[name];
         if (typeof(f) == "function" && f.name.startsWith("synth")) {
@@ -137,16 +154,22 @@ $(document).ready(() => {
     recalc();
 
     $(".play").on("click", () => {
-        $(".pause").show();
-        $(".play").hide();
         play(window.activeSynth);
     });
     $(".pause").on("click", () => {
-        $(".pause").hide();
-        $(".play").show();
         play(null);
     });
 });
+
+
+function synthEury(tune, tempo) {
+    var u;
+    tempo = 400/tempo;
+    return function(t) {
+        u=t*((t>>13^t>>tempo)%tune)/4;
+        return ((u*4&127)+(u%254*4&127)|!(u&32)-1|128&30000/(t%2048+1))&255 / 255;
+    }
+}
 
 function synthWhiteNoise() {
     return function (t) {
@@ -157,13 +180,5 @@ function synthWhiteNoise() {
 function synthMelody() {
     return function (t) {
         return (255 & (t * (t >> 12 & 42))) / 256.0;
-    }
-}
-
-function synthEury(X) {
-    var u;
-    return function(t) {
-        u=t*((t>>13^t>>11)%X)/4;
-        return ((u*4&127)+(u%254*4&127)|!(u&32)-1|128&30000/(t%2048+1))&255 / 255;
     }
 }
