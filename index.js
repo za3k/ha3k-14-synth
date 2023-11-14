@@ -30,13 +30,11 @@ function updateBosch(data) {
     blackenCanvas(cvs);
     ctx.strokeStyle = '#f77';
     ctx.beginPath();
-    //console.log(data);
     const n = Math.min(data.length, ~~(ww / 2));
     for (let i = 0; i < n; i++) {
         const y = Math.max(0, Math.min(hh, (1 - .4 * data[i]/volume) * hh/2));
         if (isNaN(y)) continue;
         const x = ww * (i + 0.5) / n;
-        //if (i % 20 == 0) console.log({x, y, i, d: data[i]});
         if (!i) {
             ctx.moveTo(x, y);
         } else {
@@ -58,11 +56,9 @@ function play(g) {
     setupPlay();
     if (g) {
         window.playing = true;
-        console.log("Audio started");
         audioProcessor.connect(audioContext.destination);
     } else {
         window.playing = false;
-        console.log("Audio stopped");
         audioProcessor.disconnect();
     }
     updatePlayButton();
@@ -201,7 +197,7 @@ $(document).ready(() => {
 function synthEury(tune, tempo) {
     // Eurybeat is from http://canonical.org/~kragen/sw/dev3/sweetdreams
     return function(t) {
-        u=t*((t>>13^t>>tempo)%tune)/4;
+        var u=t*((t>>13^t>>tempo)%tune)/4;
         return ((u*4&127)+(u%254*4&127)|!(u&32)-1|128&30000/(t%2048+1))&255 / 255;
     }
 }
