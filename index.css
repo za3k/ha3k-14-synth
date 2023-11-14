@@ -58,3 +58,14 @@ label {
     content: "???";
     text-align: left;
 }
+
+.footer {
+    position: fixed;
+    border-top: 1px solid lightgrey;
+    padding: 4px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    font-size: 12pt;
+    margin-left: 0;
+}
