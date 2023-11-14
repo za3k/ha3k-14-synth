@@ -44,15 +44,18 @@ function recalc() {
     });
     if (_.contains(fargs, undefined)) {
         $("#result").text(null);
+        $(".play").hide();
         return;
     }
     try {
         var result = window.activeSynth = f.apply(params, fargs);
     } catch (e) {
         $("#result").text(e);
+        $(".play").hide();
         return;
     }
     $("#result").text("Ready to play");
+    $(".play").show();
 }
 
 function arg_names(f) {
@@ -157,10 +160,10 @@ function synthMelody() {
     }
 }
 
-function synthEury() {
+function synthEury(X) {
     var u;
     return function(t) {
-        u=t*((t>>13^t>>11)%7)/4;
+        u=t*((t>>13^t>>11)%X)/4;
         return ((u*4&127)+(u%254*4&127)|!(u&32)-1|128&30000/(t%2048+1))&255 / 255;
     }
 }
