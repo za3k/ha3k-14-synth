@@ -27,8 +27,7 @@ function updateBosch(data) {
     cvs.width = ww;
     cvs.height = hh;
 
-    ctx.fillStyle = 'black';
-    ctx.fillRect(0, 0, ww, hh);
+    blackenCanvas(cvs);
     ctx.strokeStyle = '#f77';
     ctx.beginPath();
     //console.log(data);
@@ -45,6 +44,14 @@ function updateBosch(data) {
         }
     }
     ctx.stroke();
+}
+
+function blackenCanvas(cvs) {
+    const ctx = cvs.getContext('2d'),
+          ww = cvs.offsetWidth,
+          hh = cvs.offsetHeight;
+    ctx.fillStyle = 'black';
+    ctx.fillRect(0, 0, ww, hh);
 }
 
 function play(g) {
@@ -185,6 +192,7 @@ $(document).ready(() => {
     $(".pause").on("click", () => {
         play(null);
     });
+    blackenCanvas(document.getElementById('bosch'));
 });
 
 
