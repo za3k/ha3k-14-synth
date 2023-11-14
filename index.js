@@ -10,11 +10,11 @@ function setupPlay() {
         if (!window.activeSynth) return;
         var output = e.outputBuffer.getChannelData(0);
         for (var i = 0; i < output.length; i++) {
-            output[i] = Math.min(window.activeSynth(loops*output.length + i), 1) * 0.02;
+            output[i] = Math.max(-1, Math.min(window.activeSynth(loops*output.length + i), 1)) * window.volume;
         }
         loops++;
     }
-
+    window.volume = 0.02;
 }
 function play(g) {
     setupPlay();
@@ -81,20 +81,11 @@ function change_parameters(new_args) {
         $("#inputs div:has(input[name=" + arg + "])").remove();
     });
     _.each(added_args, function(arg) {
-        $("#inputs").append(`<div><label>${arg}</label><input type="range" name="${arg}" min="0" max="100" value="50"></div>`);
+        $("#inputs").append(`<div class="slider"><label>${arg}</label><input type="range" name="${arg}" min="0" max="100" value="50"></div>`);
         $("#inputs input[name=" + arg + "]").on("input", function() {
             load_inputs();
             recalc();
         });
-
-        // OLD: Text box
-        /*
-        $("#inputs").append("<div><label>" + arg + "</label><input type=\"text\" name=\"" + arg + "\" value=\"\"></div>");
-        $("#inputs input[name=" + arg + "]").on("input", function() {
-            load_inputs();
-            recalc();
-        });
-        */
     });
     args = new_args;
 }
@@ -146,6 +137,10 @@ $(document).ready(() => {
         redefine($("#formula").text().trim());
         load_inputs();
         recalc();
+    });
+    $("input[name=volume]").on("input", function() {
+        const volume = $("input[name=volume]").val();
+        window.volume = Math.exp(-0.05 * (100-volume));
     });
     
     load_function($("#premade").val());
