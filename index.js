@@ -47,12 +47,12 @@ function recalc() {
         return;
     }
     try {
-        var result = f.apply(params, fargs);
+        var result = window.activeSynth = f.apply(params, fargs);
     } catch (e) {
         $("#result").text(e);
         return;
     }
-    $("#result").text(result);
+    $("#result").text("Ready to play");
 }
 
 function arg_names(f) {
@@ -96,8 +96,6 @@ function load_function(func_name) {
     const source = f.toString();
     HEADER = "// Javascript\n// Edit me and change my arguments!\n"
     $("#formula").text(HEADER + source);
-
-    window.activeSynth = f;
 }
 
 $(document).ready(() => {
@@ -147,10 +145,22 @@ $(document).ready(() => {
     });
 });
 
-function synthWhiteNoise(t) {
-    return Math.random() * 2 - 1;
+function synthWhiteNoise() {
+    return function (t) {
+        return Math.random() * 2 - 1;
+    }
 }
 
-function synthMelody(t) {
-    return (255 & (t * (t >> 12 & 42))) / 256.0;
+function synthMelody() {
+    return function (t) {
+        return (255 & (t * (t >> 12 & 42))) / 256.0;
+    }
+}
+
+function synthEury() {
+    var u;
+    return function(t) {
+        u=t*((t>>13^t>>11)%7)/4;
+        return ((u*4&127)+(u%254*4&127)|!(u&32)-1|128&30000/(t%2048+1))&255 / 255;
+    }
 }
