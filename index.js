@@ -12,10 +12,37 @@ function setupPlay() {
         for (var i = 0; i < output.length; i++) {
             output[i] = Math.min(window.activeSynth(loops*output.length + i), 1) * 0.02;
         }
+        updateBosch(output);
         loops++;
     }
-
 }
+
+function updateBosch(data) {
+    const cvs = document.getElementById('bosch')
+        , ctx = cvs.getContext('2d')
+        , ww = cvs.width
+        , hh = cvs.height
+
+    ctx.fillStyle = 'black';
+    ctx.fillRect(0, 0, ww, hh);
+    ctx.strokeStyle = '#f77';
+    ctx.beginPath();
+    //console.log(data);
+    const n = Math.min(data.length, ~~(ww / 2));
+    for (let i = 0; i < n; i++) {
+        const y = Math.max(0, Math.min(hh, (1 - 10 * data[i]) * hh/2));
+        if (isNaN(y)) continue;
+        const x = ww * (i + 0.5) / n;
+        //if (i % 20 == 0) console.log({x, y, i, d: data[i]});
+        if (!i) {
+            ctx.moveTo(x, y);
+        } else {
+            ctx.lineTo(x, y);
+        }
+    }
+    ctx.stroke();
+}
+
 function play(g) {
     setupPlay();
     if (g) {
