@@ -32,7 +32,7 @@ function updateBosch(data) {
     ctx.beginPath();
     const n = Math.min(data.length, ~~(ww / 2));
     for (let i = 0; i < n; i++) {
-        const y = Math.max(0, Math.min(hh, (1 - .4 * data[i]/volume) * hh/2));
+        const y = Math.max(0, Math.min(hh, (1 - 0.97 * data[i]/volume) * hh/2));
         if (isNaN(y)) continue;
         const x = ww * (i + 0.5) / n;
         if (!i) {
