@@ -10,11 +10,12 @@ function setupPlay() {
         if (!window.activeSynth) return;
         var output = e.outputBuffer.getChannelData(0);
         for (var i = 0; i < output.length; i++) {
-            output[i] = Math.min(window.activeSynth(loops*output.length + i), 1) * 0.02;
+            output[i] = Math.max(-1, Math.min(window.activeSynth(loops*output.length + i), 1)) * window.volume;
         }
         updateBosch(output);
         loops++;
     }
+    window.volume = 0.02;
 }
 
 function updateBosch(data) {
@@ -30,7 +31,7 @@ function updateBosch(data) {
     //console.log(data);
     const n = Math.min(data.length, ~~(ww / 2));
     for (let i = 0; i < n; i++) {
-        const y = Math.max(0, Math.min(hh, (1 - 10 * data[i]) * hh/2));
+        const y = Math.max(0, Math.min(hh, (1 - .4 * data[i]/volume) * hh/2));
         if (isNaN(y)) continue;
         const x = ww * (i + 0.5) / n;
         //if (i % 20 == 0) console.log({x, y, i, d: data[i]});
@@ -108,20 +109,11 @@ function change_parameters(new_args) {
         $("#inputs div:has(input[name=" + arg + "])").remove();
     });
     _.each(added_args, function(arg) {
-        $("#inputs").append(`<div><label>${arg}</label><input type="range" name="${arg}" min="0" max="100" value="50"></div>`);
+        $("#inputs").append(`<div class="slider"><label>${arg}</label><input type="range" name="${arg}" min="0" max="100" value="50"></div>`);
         $("#inputs input[name=" + arg + "]").on("input", function() {
             load_inputs();
             recalc();
         });
-
-        // OLD: Text box
-        /*
-        $("#inputs").append("<div><label>" + arg + "</label><input type=\"text\" name=\"" + arg + "\" value=\"\"></div>");
-        $("#inputs input[name=" + arg + "]").on("input", function() {
-            load_inputs();
-            recalc();
-        });
-        */
     });
     args = new_args;
 }
@@ -173,6 +165,10 @@ $(document).ready(() => {
         redefine($("#formula").text().trim());
         load_inputs();
         recalc();
+    });
+    $("input[name=volume]").on("input", function() {
+        const volume = $("input[name=volume]").val();
+        window.volume = Math.exp(-0.05 * (100-volume));
     });
     
     load_function($("#premade").val());
