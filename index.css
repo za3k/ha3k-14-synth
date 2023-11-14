@@ -1,4 +1,39 @@
-html, body {
-    height: 100%;
-    width: 100%;
+body > * {
+    margin-left: 100px;
+}
+
+.error, .inputs, .result {
+    max-width: 400px;
+    margin-bottom: 30px;
+}
+label {
+    margin-right: 20px;
+    width: 100px;
+    text-align: right;
+    display: inline-block;
+}
+#formula {
+    margin-left: 100px;
+    color: darkgreen;
+    border: 1px lightgray solid;
+    border-radius: 10px;
+    padding: 10px;
+    outline: none;
+}
+#formula:focus {
+    box-shadow: 1px 1px 2px lightgray;
+}
+#result {
+    font-style: bold;
+}
+#error:not(:empty) {
+    color: red;
+}
+#error:empty::after {
+    content: "None";
+}
+
+#result:empty::after {
+    content: "???";
+    text-align: left;
 }

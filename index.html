@@ -1,15 +1,23 @@
 <html>
 <head>
-    <title>hack-a-synth</title>
+    <title>hack-a-synth.js</title>
     <link rel="stylesheet" href="index.css">
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
     <script src="js/jquery-3.7.1.min.js"></script>
+    <script src="js/underscore-umd-min.js"></script>
     <script src="index.js"></script>
 </head>
 <body>
 
-
-
-
+<div class="premade">
+    <label>Premade</label>
+    <select id="premade">
+    </select>
+<div class="definition"><label>Function</label><pre id="formula" contenteditable="true">
+</pre></div>
+<div class="error"><label>Errors</label><span id="error"></span></div>
+<div class="inputs" id="inputs"></div>
+<input type="button" class="play button" value=Play>
+<input type="button" class="pause button" value="Pause" style="display: none;">
 </body>
 </html>
