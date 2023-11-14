@@ -1,0 +1,7 @@
+Hack-A-Day 14: Synth
+
+Features
+
+- A website (JS): Make an audio file OR use API
+- A website (backend): Have an API that requests audio and then plays it
+- A local program
