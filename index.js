@@ -158,8 +158,7 @@ $(document).ready(() => {
 
 
 function synthEury(tune, tempo) {
-    var u;
-    tempo = 400/tempo;
+    // Eurybeat is from http://canonical.org/~kragen/sw/dev3/sweetdreams
     return function(t) {
         u=t*((t>>13^t>>tempo)%tune)/4;
         return ((u*4&127)+(u%254*4&127)|!(u&32)-1|128&30000/(t%2048+1))&255 / 255;
