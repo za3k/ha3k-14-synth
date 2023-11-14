@@ -21,6 +21,10 @@ body > * {
 .slider > input {
     flex: 1 1;
 }
+.slider .display {
+    width: 2em;
+    text-align: right;
+}
 #bosch {
     display: block;
     width: 95%;
