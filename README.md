@@ -4,4 +4,6 @@ This is a little synth made by [za3k](https://za3k.com) and [muurkha](http://can
 
 You can interact with a demo of it [here](https://za3k.github.io/ha3k-14-synth/).
 
+[![Screenshot of synth and oscilloscope](screenshot.jpg)](https://za3k.github.io/ha3k-14-synth/)
+
 Have fun!
