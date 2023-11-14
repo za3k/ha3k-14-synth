@@ -195,10 +195,11 @@ $(document).ready(() => {
 
 
 function synthEury(tune, tempo) {
-    // Eurybeat is from http://canonical.org/~kragen/sw/dev3/sweetdreams
+    // Eurybeat is derived from http://canonical.org/~kragen/sw/dev3/sweetdreams
+    // but is kind of broken
     return function(t) {
-        var u=t*((t>>13^t>>tempo)%tune)/4;
-        return ((u*4&127)+(u%254*4&127)|!(u&32)-1|128&30000/(t%2048+1))&255 / 255;
+        var u=t*((t>>16^t>>tempo)%tune)/4;
+        return (((u*4&127)+(u%254*4&127)|!(u&32)-1|128&30000/(t%32768+1))&255) / 255;
     }
 }
 
