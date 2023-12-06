@@ -6,8 +6,13 @@ input, select {
     font-size: 24pt;
 }
 
-body > * {
-    margin-left: 100px;
+@media screen and (min-width: 800px) {
+    body > * {
+        margin-left: 100px;
+    }
+    #formula {
+        margin-left: 100px;
+    }
 }
 
 .error, .result {
@@ -37,13 +42,14 @@ label {
     display: inline-block;
 }
 #formula {
-    margin-left: 100px;
     color: darkgreen;
     border: 1px lightgray solid;
     border-radius: 10px;
     padding: 10px;
     outline: none;
     font-size: 14pt;
+
+    white-space: pre-wrap;
 }
 #formula:focus {
     box-shadow: 1px 1px 2px lightgray;
